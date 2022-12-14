@@ -1,14 +1,28 @@
+import axios from 'axios'
 import React from 'react'
 import { Container, Nav, Navbar } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 import logo from '../assets/logo.png'
-import { useCurrentUser } from "../contexts/CurrentUserContext.js"
+import { useCurrentUser, useSetCurrentUser } from "../contexts/CurrentUserContext.js"
+import useClickOutsideToggle from '../hooks/useClickOutsideToggle'
 import styles from '../styles/NavBar.module.css'
 import Avatar from './Avatar'
 
 const NavBar = () => {
     const currentUser = useCurrentUser();
+    const setCurrentUser = useSetCurrentUser();
 
+    const handleSignOut = async () => {
+        try {
+            await axios.post("dj-rest-auth/logout/");
+            setCurrentUser(null);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+    
+    const { expanded, setExpanded, ref } = useClickOutsideToggle();
+    
     const addPostIcon = (
         <>
             <NavLink
@@ -38,7 +52,7 @@ const NavBar = () => {
             </NavLink>
             <NavLink
                 to='/'
-                onClick={() => {}}
+                onClick={handleSignOut}
             >
                 <i className="fas fa-sign-out-alt"></i>Sign out
             </NavLink>
@@ -68,10 +82,9 @@ const NavBar = () => {
         </>
     );
 
-
   return (
     <div>
-        <Navbar className={styles.NavBar} expand="md" fixed="top">
+        <Navbar expanded={expanded} className={styles.NavBar} expand="md" fixed="top">
             <Container>
                 <NavLink to='/'>
                     <Navbar.Brand>
@@ -79,7 +92,7 @@ const NavBar = () => {
                     </Navbar.Brand>
                 </NavLink>
                 {currentUser && addPostIcon}
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Toggle ref={ref} onClick={() => setExpanded(!expanded)} aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ml-auto text-left">
                     <NavLink

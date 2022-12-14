@@ -10,14 +10,14 @@ import Image from "react-bootstrap/Image";
 import Row from "react-bootstrap/Row";
 
 import { Link, useHistory } from "react-router-dom";
-import { useSetCurrentUser } from "../../contexts/CurrentUserContext";
 
 import appStyles from "../../App.module.css";
+import { useSetCurrentUser } from "../../contexts/CurrentUserContext";
 import btnStyles from "../../styles/Button.module.css";
 import styles from "../../styles/SignInUpForm.module.css";
 
 function SignInForm() {
-    const setCurrentUser = useSetCurrentUser()
+  const setCurrentUser = useSetCurrentUser();
 
   const [signInData, setSignInData] = useState({
     username: "",
@@ -30,8 +30,9 @@ function SignInForm() {
   const history = useHistory();
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     try {
-      const {data} = await axios.post("/dj-rest-auth/login/", signInData);
+      const { data } = await axios.post("/dj-rest-auth/login/", signInData);
       setCurrentUser(data.user);
       history.push("/");
     } catch (err) {
