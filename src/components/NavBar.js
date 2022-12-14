@@ -4,10 +4,51 @@ import { NavLink } from 'react-router-dom'
 import logo from '../assets/logo.png'
 import { useCurrentUser } from "../contexts/CurrentUserContext.js"
 import styles from '../styles/NavBar.module.css'
+import Avatar from './Avatar'
 
 const NavBar = () => {
     const currentUser = useCurrentUser();
-    const loggedInIcons = <>{currentUser?.username}</>
+
+    const addPostIcon = (
+        <>
+            <NavLink
+                activeClassName={styles.Active}
+                className={styles.NavLink}
+                to='/posts/create'
+            >
+                <i className="far fa-plus-square"></i>Add post
+            </NavLink>
+        </>
+    )
+    const loggedInIcons = 
+        <>
+            <NavLink
+                activeClassName={styles.Active}
+                className={styles.NavLink}
+                to='/feed'
+            >
+                <i className="fas fa-stream"></i>Feed
+            </NavLink>
+            <NavLink
+                activeClassName={styles.Active}
+                className={styles.NavLink}
+                to='/liked'
+            >
+                <i className="fas fa-heart"></i>Liked
+            </NavLink>
+            <NavLink
+                to='/'
+                onClick={() => {}}
+            >
+                <i className="fas fa-sign-out-alt"></i>Sign out
+            </NavLink>
+            <NavLink
+                to={`/profiles/${currentUser?.profile_id}`}
+                onClick={() => {}}
+            >
+            <Avatar src={currentUser?.profile_image} text="Profile" height={40} />
+            </NavLink>
+        </>
     const loggedOutIcons = (
         <>
             <NavLink
@@ -37,6 +78,7 @@ const NavBar = () => {
                         <img src={logo} alt="logo" height="45" />
                     </Navbar.Brand>
                 </NavLink>
+                {currentUser && addPostIcon}
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ml-auto text-left">
